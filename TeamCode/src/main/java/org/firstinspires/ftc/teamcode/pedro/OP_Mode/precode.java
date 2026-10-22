@@ -17,6 +17,7 @@ public class precode extends OpMode {
         limelight.camera_init(hardwareMap,"limelight",8);
         limelight.start();
         intake.intt(hardwareMap,"distance sensor","Color sensor","intake motor");
+        intake.set_ball_munber(4);
 
 
     }
@@ -24,7 +25,6 @@ public class precode extends OpMode {
     @Override
     public void loop() {
         drive.drive(-gamepad1.left_stick_y,gamepad1.left_stick_x,gamepad1.right_stick_x);
-        intake.set_ball_munber(4);
         intake.run();
 
 
