@@ -16,7 +16,7 @@ public class precode extends OpMode {
         imu.Reset_imu();
         limelight.camera_init(hardwareMap,"limelight",8);
         limelight.start();
-        intake.intt(hardwareMap,"distance sensor","Color sensor","intake motor");
+        intake.intt(hardwareMap,"distance sensor","Color sensor","intake motor","Intake Servo");
         intake.set_ball_munber(4);
 
 
