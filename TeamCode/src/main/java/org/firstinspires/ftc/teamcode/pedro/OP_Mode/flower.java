@@ -23,7 +23,7 @@ public class flower {
 
     }
 
-    private void run_servo(double speed) {
+    public void run_servo(double speed) {
             left_fServo.setPower(speed);
             right_fServo.setPower(speed);
     }
