@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode.pedro.OP_Mode;
 
+import com.pedropathing.follower.Follower;
+import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
 
 public class centerControl {
     private Servo gate;
@@ -10,6 +13,9 @@ public class centerControl {
     private double[] step={1,2};
     private double flower_state=0;
     private double shooter_state=0;
+
+
+    private Follower follower;
     public void intt(HardwareMap hwmap,String gate_Srevo,String LeftFlowerServo,String RightFlowerServo){
         gate=hwmap.get(Servo.class,gate_Srevo);
         leftFlower_gate=hwmap.get(Servo.class,LeftFlowerServo);
@@ -35,4 +41,6 @@ public class centerControl {
             gate.setPosition(0.0);
         }
     }
+
+
 }
