@@ -6,10 +6,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import java.util.Timer;
-
 public class turret {
-    pose_source RobotPosition = new pose_source();
+    private pose_source robotPosition;
     private DcMotorEx small_M;
     private DcMotorEx big_M;
     private DcMotorEx heading_M;
@@ -30,8 +28,8 @@ public class turret {
         heading_M.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
     }
 
-    public void inttPOS(HardwareMap hwmap,double x,double y, double heading){
-        RobotPosition.init(hwmap,x,y,heading);
+    public void setPoseSource(pose_source position) {
+        this.robotPosition = position;
     }
 
     public void setup(String team) {
@@ -62,7 +60,9 @@ public class turret {
         trackingTimer.reset();
     }
 
-    private double getTaget (String team,boolean angle){
+    private double getTarget (String team,boolean angle){
+        robotPosition.update();
+
         double Red_X = 58;
         double redUP_Y = 84;
         double redDown_Y = 56;
@@ -77,29 +77,29 @@ public class turret {
         double distanceToTarget = 0;
 
         if ("red".equalsIgnoreCase(team)) {
-            if (RobotPosition.y() > 70.75) {
-                xoffset = Red_X - RobotPosition.x();
-                yoffset = redUP_Y - RobotPosition.y();
+            if (robotPosition.y() > 70.75) {
+                xoffset = Red_X - robotPosition.x();
+                yoffset = redUP_Y - robotPosition.y();
                 angleToTarget = Math.atan2(yoffset, xoffset);
                 distanceToTarget = Math.hypot(xoffset, yoffset);
 
-            } else if (RobotPosition.y() < 70.75) {
-                xoffset = Red_X - RobotPosition.x();
-                yoffset = redDown_Y - RobotPosition.y();
+            } else if (robotPosition.y() < 70.75) {
+                xoffset = Red_X - robotPosition.x();
+                yoffset = redDown_Y - robotPosition.y();
                 angleToTarget = Math.atan2(yoffset, xoffset);
                 distanceToTarget = Math.hypot(xoffset, yoffset);
             }
 
         } else if ("blue".equalsIgnoreCase(team)) {
-            if (RobotPosition.y() > 70.75) {
-                xoffset = Blue_X - RobotPosition.x();
-                yoffset = blueUP_Y - RobotPosition.y();
+            if (robotPosition.y() > 70.75) {
+                xoffset = Blue_X - robotPosition.x();
+                yoffset = blueUP_Y - robotPosition.y();
                 angleToTarget = Math.atan2(yoffset, xoffset);
                 distanceToTarget = Math.hypot(xoffset, yoffset);
 
-            } else if (RobotPosition.y() < 70.75) {
-                xoffset = Blue_X - RobotPosition.x();
-                yoffset = blueDown_Y - RobotPosition.y();
+            } else if (robotPosition.y() < 70.75) {
+                xoffset = Blue_X - robotPosition.x();
+                yoffset = blueDown_Y - robotPosition.y();
                 angleToTarget = Math.atan2(yoffset, xoffset);
                 distanceToTarget = Math.hypot(xoffset, yoffset);
             }
@@ -113,17 +113,19 @@ public class turret {
         return 0.0;
     }
 
-    public void start_tracking(){
-        double deltaTime = trackingTimer.seconds();
-        trackingTimer.reset();
-        if (getTaget(Team,true)<=0.5){
-            heading_M.setPower(0);
-            lastError=0;
+    public void start_tracking() {
+        if (robotPosition == null) {
             return;
         }
 
-        double error =getTaget(Team,true)-Math.toDegrees(RobotPosition.heading());
-        double pTrem= error * kp;
+        double deltaTime = trackingTimer.seconds();
+        double error =getTarget(Team,true)-Math.toDegrees(robotPosition.heading());
+        double pTerm = error * kp;
+        trackingTimer.reset();
+        if (error > 180){error -= 360;}
+        if (error < 180){error += 360;}
+
+
 
         double dTerm =0;
         if(deltaTime > 0){
@@ -133,7 +135,7 @@ public class turret {
         if(Math.abs(error) < angleTolerance){
             power=0;
         }else {
-            power= Range.clip(pTrem + dTerm,-MAX_POWER,MAX_POWER);
+            power= Range.clip(pTerm + dTerm,-MAX_POWER,MAX_POWER);
         }
 
         heading_M.setPower(power);

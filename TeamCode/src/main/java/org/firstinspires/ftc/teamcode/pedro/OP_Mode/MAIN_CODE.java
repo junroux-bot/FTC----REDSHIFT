@@ -2,15 +2,18 @@ package org.firstinspires.ftc.teamcode.pedro.OP_Mode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.pedropathing.follower.Follower;
 
 @TeleOp
-public class precode extends OpMode {
+public class MAIN_CODE extends OpMode {
     Motor_Setup drive = new Motor_Setup();
     IMU_Setup imu = new IMU_Setup();
     limelight_Setup limelight = new limelight_Setup();
     Intake intake = new Intake();
     flower flower = new flower();
     centerControl center = new centerControl();
+    turret turret = new turret();
+    pose_source Position = new pose_source();
 
     private boolean lastX = false;
     private boolean lastrightB = false;
@@ -26,12 +29,18 @@ public class precode extends OpMode {
         intake.set_ball_munber(4);
         flower.intt(hardwareMap,"lfs","rfs","fg");
         center.intt(hardwareMap,"g","lfg","rfg");
-
+        turret.intt(hardwareMap,"sfm","bfm","hm");
+        Position.init(hardwareMap,OpModeStorage.autonomousEndPose.x(),OpModeStorage.autonomousEndPose.y(),OpModeStorage.autonomousEndPose.heading());
+        Position.update();
+        turret.setup("red");
+        turret.setPoseSource(Position);
 
     }
 
     @Override
     public void loop() {
+        Position.update();
+
         boolean currentX= gamepad1.x;
         boolean currentY= gamepad1.y;
         boolean currentRB= gamepad1.right_bumper;
@@ -50,6 +59,8 @@ public class precode extends OpMode {
         if (currentRB && !lastrightB){
             center.shooter_gate();
         }
+
+        turret.start_tracking();
 
         lastX = currentX;
         lastY =currentY;
