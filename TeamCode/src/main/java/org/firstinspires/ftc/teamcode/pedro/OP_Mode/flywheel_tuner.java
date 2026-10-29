@@ -86,8 +86,6 @@ public class flywheel_tuner extends OpMode {
         PIDFCoefficients Small_pidfCoefficients = new PIDFCoefficients(sP,0,0,sF);
         PIDFCoefficients Big_pidfCoefficients = new PIDFCoefficients(bP,0,0,bF);
 
-        Sm_small.setVelocity(curTagetVelocity);
-        Sm_big.setVelocity(B_curTagetVelocity);
 
         double curVelocity =Sm_small.getVelocity();
         double B_curVelocity =Sm_big.getVelocity();
