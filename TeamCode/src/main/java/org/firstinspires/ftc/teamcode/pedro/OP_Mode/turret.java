@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.pedro.OP_Mode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -22,7 +23,15 @@ public class turret {
 
     public void intt(HardwareMap hwmap,String SmallFlywheel_Motor,String BigFlyWheel_Motor,String Heading_Motor){
         small_M=hwmap.get(DcMotorEx.class,SmallFlywheel_Motor);
+        small_M.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDFCoefficients S_PIDfCoefficients = new PIDFCoefficients(0,0,0,0);
+        small_M.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, S_PIDfCoefficients);
+
         big_M=hwmap.get(DcMotorEx.class,BigFlyWheel_Motor);
+        big_M.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDFCoefficients B_PIDFCoefficients = new PIDFCoefficients(0,0,0,0);
+        big_M.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER,B_PIDFCoefficients);
+
         heading_M=hwmap.get(DcMotorEx.class,Heading_Motor);
         heading_M.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         heading_M.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -60,7 +69,7 @@ public class turret {
         trackingTimer.reset();
     }
 
-    private double getTarget (String team,boolean angle){
+    private double getTarget (String team,boolean radians){
         robotPosition.update();
 
         double Red_X = 58;
@@ -105,9 +114,9 @@ public class turret {
             }
         }
 
-        if (angle) {
+        if (radians) {
             return angleToTarget;
-        } else if (!angle) {
+        } else if (!radians) {
             return distanceToTarget;
         }
         return 0.0;
@@ -119,13 +128,13 @@ public class turret {
         }
 
         double deltaTime = trackingTimer.seconds();
-        double error =getTarget(Team,true)-Math.toDegrees(robotPosition.heading());
-        double pTerm = error * kp;
         trackingTimer.reset();
-        if (error > 180){error -= 360;}
-        if (error < 180){error += 360;}
+        double error =getTarget(Team,true)-robotPosition.heading();
 
+        if (error > Math.PI){error -= 2 * Math.PI;}
+        if (error < Math.PI){error += 2 * Math.PI;}
 
+        double pTerm = error * kp;
 
         double dTerm =0;
         if(deltaTime > 0){
@@ -142,5 +151,13 @@ public class turret {
         lastError = error;
 
     }
+
+    public double get_velocity(){
+        double velocity;
+        velocity=1+2-getTarget(Team,false);
+
+        return velocity;
+    }
+
 
 }
