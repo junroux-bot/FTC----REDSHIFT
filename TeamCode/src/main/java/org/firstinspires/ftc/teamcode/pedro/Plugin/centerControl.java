@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.pedro.OP_Mode;
+package org.firstinspires.ftc.teamcode.pedro.Plugin;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 

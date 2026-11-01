@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pedro.OP_Mode;
+package org.firstinspires.ftc.teamcode.pedro.Plugin;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -130,9 +130,13 @@ public class turret {
         double deltaTime = trackingTimer.seconds();
         trackingTimer.reset();
         double error =getTarget(Team,true)-robotPosition.heading();
+        final double M_limit =175;
+        final double MIN_limit =-175;
+        double heading =heading_M.getCurrentPosition();
+        double currentDegrees = (heading/ 103.8) * 360.0;
 
         if (error > Math.PI){error -= 2 * Math.PI;}
-        if (error < Math.PI){error += 2 * Math.PI;}
+        if (error < -Math.PI){error += 2 * Math.PI;}
 
         double pTerm = error * kp;
 
@@ -147,17 +151,23 @@ public class turret {
             power= Range.clip(pTerm + dTerm,-MAX_POWER,MAX_POWER);
         }
 
+        if((Math.toDegrees(error)+ currentDegrees) >M_limit || (Math.toDegrees(error)+ currentDegrees) < MIN_limit){
+            power=-power;
+        }
+
         heading_M.setPower(power);
         lastError = error;
 
     }
 
-    public double get_velocity(){
+    public void set_velocity(){
         double velocity;
         velocity=1+2-getTarget(Team,false);
 
-        return velocity;
     }
+
+
+
 
 
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pedro.OP_Mode;
+package org.firstinspires.ftc.teamcode.pedro.Plugin;
 //Make sure this matches your file location
 import com.pedropathing.math.Pose;
 public class OpModeStorage {

@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode.pedro.OP_Mode;
+package org.firstinspires.ftc.teamcode.pedro.Plugin;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 
 @TeleOp
 public class test extends OpMode {

@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.pedro.OP_Mode;
+package org.firstinspires.ftc.teamcode.pedro.Plugin;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.pedropathing.follower.Follower;
 
 @TeleOp
-public class MAIN_CODE extends OpMode {
+public class BLUE_OP extends OpMode {
     Motor_Setup drive = new Motor_Setup();
     IMU_Setup imu = new IMU_Setup();
     limelight_Setup limelight = new limelight_Setup();
@@ -32,7 +31,7 @@ public class MAIN_CODE extends OpMode {
         turret.intt(hardwareMap,"sfm","bfm","hm");
         Position.init(hardwareMap,OpModeStorage.autonomousEndPose.x(),OpModeStorage.autonomousEndPose.y(),OpModeStorage.autonomousEndPose.heading());
         Position.update();
-        turret.setup("red");
+        turret.setup("blue");
         turret.setPoseSource(Position);
 
     }
