@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pedro.Plugin;
+package org.firstinspires.ftc.teamcode.pedro.Main_code;
 
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;

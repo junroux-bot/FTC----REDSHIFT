@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pedro.Plugin;
+package org.firstinspires.ftc.teamcode.pedro.Main_code;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,10 +11,10 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 public class flywheel_tuner extends OpMode {
     private DcMotorEx Sm_big;
     private DcMotorEx Sm_small;
-    public double highVelocity = 1500;
-    public double lowVelocity = 900;
-    public double B_highVelocity = 1500;
-    public double B_LowVelocity = 900;
+    public double highVelocity = 2500;
+    public double lowVelocity = 1000;
+    public double B_highVelocity = 2500;
+    public double B_LowVelocity = 1000;
     double curTargetVelocity = highVelocity;
     double B_curTargetVelocity = B_highVelocity;
     double sF = 0;
@@ -33,7 +33,7 @@ public class flywheel_tuner extends OpMode {
         Sm_big.setDirection(DcMotorSimple.Direction.REVERSE);
         Sm_small.setDirection(DcMotorSimple.Direction.REVERSE);
         PIDFCoefficients smallPidfCoefficients = new PIDFCoefficients(sP, 0, 0, sF);
-        PIDFCoefficients bigPidfCoefficients = new PIDFCoefficients(bP, 0, 0, bF);
+        PIDFCoefficients bigPidfCoefficients = new PIDFCoefficients(112.335, 0.01, 0, 12.55);
         Sm_small.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, smallPidfCoefficients);
         Sm_big.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, bigPidfCoefficients);
     }
