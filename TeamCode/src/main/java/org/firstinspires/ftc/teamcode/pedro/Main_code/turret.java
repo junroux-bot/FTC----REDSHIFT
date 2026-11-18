@@ -122,6 +122,16 @@ public class turret {
         return 0.0;
     }
 
+    public void UpdateVelocity(){
+        double Bvelocity;
+        double Svelocity;
+        Bvelocity=1+2-getTarget(Team,false);
+        Svelocity=1+2-getTarget(Team,false);
+        small_M.setVelocity(Svelocity);
+        big_M.setVelocity(Bvelocity);
+
+    }
+
     public void start_tracking() {
         if (robotPosition == null) {
             return;
@@ -155,19 +165,11 @@ public class turret {
             power=-power;
         }
 
+        UpdateVelocity();
+
         heading_M.setPower(power);
         lastError = error;
 
     }
-
-    public void set_velocity(){
-        double velocity;
-        velocity=1+2-getTarget(Team,false);
-
-    }
-
-
-
-
 
 }

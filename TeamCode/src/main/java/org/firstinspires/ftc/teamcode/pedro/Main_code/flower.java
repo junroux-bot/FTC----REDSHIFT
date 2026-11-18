@@ -20,7 +20,7 @@ public class flower {
         left_fServo=hwmap.get(CRServo.class,left_flower_servo);
         right_fServo=hwmap.get(CRServo.class,right_flower_servo);
         this.flower_gate=hwmap.get(Servo.class,flower_gate);
-        left_fServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        left_fServo.setDirection(DcMotorSimple.Direction.FORWARD);
         right_fServo.setDirection(DcMotorSimple.Direction.FORWARD);
 
     }

@@ -1,21 +1,26 @@
 package org.firstinspires.ftc.teamcode.pedro.Main_code;
 
-import com.pedropathing.ivy.Scheduler;
+
+import com.pedropathing.ivy.Command;
+import com.pedropathing.ivy.CommandBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.pedropathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedro.Constants;
 import com.pedropathing.api.PoseFactory;
 import com.pedropathing.math.Pose;
 import static com.pedropathing.api.Paths.*;
+import static com.pedropathing.ivy.groups.Groups.parallel;
+import static com.pedropathing.ivy.groups.Groups.sequential;
+import com.pedropathing.ivy.Scheduler;
 import static com.pedropathing.ivy.Scheduler.schedule;
 import static com.pedropathing.ivy.pedro.PedroCommands.follow;
-import com.pedropathing.ivy.Command;
-import static com.pedropathing.ivy.groups.Groups.sequential;
+
 
 import com.pedropathing.paths.Path;
-@Disabled
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+@Autonomous
 public class AUTO_RED1 extends OpMode {
 
     private Follower follower;
@@ -47,12 +52,57 @@ public class AUTO_RED1 extends OpMode {
         return line(path3,park).linear(path3,park);
     }
 
+    private Command delay(double seconds) {
+        ElapsedTime timer = new ElapsedTime();
+        return new CommandBuilder()
+                .setStart(timer::reset)                     // Reset timer when command starts
+                .setDone(() -> timer.seconds() >= seconds); // Done when timer reaches 1.0s
+    }
+
+    private Command Gate() {
+        return new CommandBuilder()
+                .setStart(() -> gate.shooter_gate())
+                .setDone(() -> true);
+    }
+
+    private Command resetIntake() {
+        return new CommandBuilder()
+                .setStart(() -> intake.reset())
+                .setDone(() -> true);
+    }
+
+    private Command runIntake(){
+        return new CommandBuilder()
+                .setStart(() -> intake.intake("run"))
+                .setDone(() -> true);
+    }
+
+    private Command shoot(){
+        return sequential(
+                Gate(),
+                delay(1.5),
+                Gate(),
+                resetIntake()
+
+        );
+    }
+
+    private Command FlowerRamp(){
+        return new CommandBuilder()
+                .setStart(() -> intake.flower_gate("open"))
+                .setDone(() -> true);
+    }
+
     private Command autoRoutine() {
         return sequential(
-                follow(follower, path1()),
+                delay(1),
+                shoot(),
+                parallel(follow(follower,path1()), FlowerRamp()),
                 follow(follower,path2()),
                 follow(follower,path3()),
+                shoot(),
                 follow(follower, end())
+
         );
     }
 
@@ -68,17 +118,24 @@ public class AUTO_RED1 extends OpMode {
         gate.intt(hardwareMap,"gs","lfs","rfs");
         turret.setup("red");
 
+
     }
 
     @Override
     public void start() {
         schedule(autoRoutine());
+        intake.set_ball_munber(4);
+        turret.start_tracking();
+
 
     }
 
     @Override
     public void loop() {
         follower.update();
+        turret.start_tracking();
+        intake.run();
+
         Scheduler.execute();
 
     }

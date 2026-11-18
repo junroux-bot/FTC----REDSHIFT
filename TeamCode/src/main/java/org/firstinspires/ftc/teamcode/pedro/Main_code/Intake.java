@@ -45,7 +45,6 @@ public class Intake {
         if(mun_ball==4){
             intake("stop");
         }else{
-            intake("run");
             if(GetDistance()<= 94 && !ballDetected){
                 mun_ball+=1;
                 ballDetected=true;
@@ -53,6 +52,10 @@ public class Intake {
                 ballDetected=false;
             }
         }
+    }
+
+    public void reset(){
+        set_ball_munber(0);
     }
 
     public void flower_gate(String state) {
