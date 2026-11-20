@@ -15,7 +15,6 @@ public class RED_OP extends OpMode {
     pose_source Position = new pose_source();
 
     private boolean lastX = false;
-    private boolean lastrightB = false;
     private boolean lastY = false;
     @Override
     public void init() {
@@ -55,15 +54,18 @@ public class RED_OP extends OpMode {
             center.flower_gate();
         }
 
-        if (currentRB && !lastrightB){
-            center.shooter_gate();
+
+        if(gamepad1.right_trigger_pressed){
+            turret.shoot(intake,center);
+        }else {
+            intake.setOveride(false);
+            center.shooter_gate(false);
         }
 
         turret.start_tracking();
 
         lastX = currentX;
         lastY =currentY;
-        lastrightB =currentRB;
 
         telemetry.addData("state",flower.getFlower_state());
 

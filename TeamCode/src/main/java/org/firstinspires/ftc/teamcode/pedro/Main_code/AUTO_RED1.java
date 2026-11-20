@@ -59,9 +59,9 @@ public class AUTO_RED1 extends OpMode {
                 .setDone(() -> timer.seconds() >= seconds); // Done when timer reaches 1.0s
     }
 
-    private Command Gate() {
+    private Command Gate(boolean mode) {
         return new CommandBuilder()
-                .setStart(() -> gate.shooter_gate())
+                .setStart(() -> gate.shooter_gate(mode))
                 .setDone(() -> true);
     }
 
@@ -79,9 +79,9 @@ public class AUTO_RED1 extends OpMode {
 
     private Command shoot(){
         return sequential(
-                Gate(),
+                Gate(true),
                 delay(1.5),
-                Gate(),
+                Gate(false),
                 resetIntake()
 
         );
@@ -98,6 +98,7 @@ public class AUTO_RED1 extends OpMode {
                 delay(1),
                 shoot(),
                 parallel(follow(follower,path1()), FlowerRamp()),
+                shoot(),
                 follow(follower,path2()),
                 follow(follower,path3()),
                 shoot(),

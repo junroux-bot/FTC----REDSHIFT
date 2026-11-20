@@ -14,7 +14,7 @@ public class Intake {
     private Servo Intake_servo;
     double mun_ball;
     private boolean ballDetected;
-    private boolean gate;
+    private boolean overide=false;
 
     public void intt(HardwareMap hwmap,String distance_ss,String Color_ss,String Motor,String Servo){
         Intake_Motor=hwmap.get(DcMotor.class,Motor);
@@ -41,8 +41,12 @@ public class Intake {
         mun_ball+=munber;
     }
 
+    public void setOveride(boolean mode){
+        overide=mode;
+    }
+
     public void run(){
-        if(mun_ball==4){
+        if(mun_ball==4 && overide==false){
             intake("stop");
         }else{
             if(GetDistance()<= 94 && !ballDetected){

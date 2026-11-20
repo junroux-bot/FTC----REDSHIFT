@@ -19,6 +19,8 @@ public class turret {
     private double angleTolerance =0.2;
     private double MAX_POWER = 0.6;
     private double power =0;
+
+
     private final ElapsedTime trackingTimer = new ElapsedTime();
 
     public void intt(HardwareMap hwmap,String SmallFlywheel_Motor,String BigFlyWheel_Motor,String Heading_Motor){
@@ -170,6 +172,12 @@ public class turret {
         heading_M.setPower(power);
         lastError = error;
 
+    }
+
+    public void shoot (Intake intake,centerControl centerControl){
+            centerControl.shooter_gate(true);
+            intake.setOveride(true);
+            intake.intake("run");
     }
 
 }

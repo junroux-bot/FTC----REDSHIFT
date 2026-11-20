@@ -32,11 +32,10 @@ public class centerControl {
         }
     }
 
-    public void shooter_gate(){
-        shooter_state=(shooter_state +1)% step.length;
-        if(shooter_state==1){
+    public void shooter_gate(boolean mode){
+        if(mode ==true){
             gate.setPosition(0.25);
-        } else if (shooter_state==0) {
+        } else if (mode == false) {
             gate.setPosition(0.0);
         }
     }
