@@ -12,7 +12,7 @@ public class turret {
     private DcMotorEx small_M;
     private DcMotorEx big_M;
     private DcMotorEx heading_M;
-    private String Team;
+
     private double kp =0.0001;
     private double kD =0.0000;
     private double lastError =0;
@@ -43,14 +43,6 @@ public class turret {
         this.robotPosition = position;
     }
 
-    public void setup(String team) {
-        if ("red".equalsIgnoreCase(team)) {
-            Team = "Red";
-        } else if ("blue".equalsIgnoreCase(team)) {
-            Team = "Blue";
-        }
-    }
-
     public void setkP(double newKP){
         kp=newKP;
     }
@@ -71,37 +63,35 @@ public class turret {
         trackingTimer.reset();
     }
 
-    private double getTarget (String team,boolean radians){
+    private double getTarget (boolean radians){
         robotPosition.update();
 
-        double Red_X = 58;
-        double redUP_Y = 84;
-        double redDown_Y = 56;
+        double X = 58;
+        double UP_Y = 84;
+        double Down_Y = 56;
 
-        double Blue_X = 84;
+        /*double Blue_X = 84;
         double blueUP_Y = 84;
-        double blueDown_Y = 56;
+        double blueDown_Y = 56;*/
 
         double xoffset = 0;
         double yoffset = 0;
         double angleToTarget = 0;
         double distanceToTarget = 0;
 
-        if ("red".equalsIgnoreCase(team)) {
-            if (robotPosition.y() > 70.75) {
-                xoffset = Red_X - robotPosition.x();
-                yoffset = redUP_Y - robotPosition.y();
-                angleToTarget = Math.atan2(yoffset, xoffset);
-                distanceToTarget = Math.hypot(xoffset, yoffset);
+        if (robotPosition.y() > 70.75) {
+            xoffset = X - robotPosition.x();
+            yoffset = UP_Y - robotPosition.y();
+            angleToTarget = Math.atan2(yoffset, xoffset);
+            distanceToTarget = Math.hypot(xoffset, yoffset);
+         } else if (robotPosition.y() < 70.75) {
+            xoffset = X - robotPosition.x();
+            yoffset = Down_Y - robotPosition.y();
+            angleToTarget = Math.atan2(yoffset, xoffset);
+            distanceToTarget = Math.hypot(xoffset, yoffset);
+        }
 
-            } else if (robotPosition.y() < 70.75) {
-                xoffset = Red_X - robotPosition.x();
-                yoffset = redDown_Y - robotPosition.y();
-                angleToTarget = Math.atan2(yoffset, xoffset);
-                distanceToTarget = Math.hypot(xoffset, yoffset);
-            }
-
-        } else if ("blue".equalsIgnoreCase(team)) {
+         /*else if ("blue".equalsIgnoreCase(team)) {
             if (robotPosition.y() > 70.75) {
                 xoffset = Blue_X - robotPosition.x();
                 yoffset = blueUP_Y - robotPosition.y();
@@ -114,7 +104,7 @@ public class turret {
                 angleToTarget = Math.atan2(yoffset, xoffset);
                 distanceToTarget = Math.hypot(xoffset, yoffset);
             }
-        }
+        }*/
 
         if (radians) {
             return angleToTarget;
@@ -127,8 +117,8 @@ public class turret {
     public void UpdateVelocity(){
         double Bvelocity;
         double Svelocity;
-        Bvelocity=1+2-getTarget(Team,false);
-        Svelocity=1+2-getTarget(Team,false);
+        Bvelocity=1+2-getTarget(false);
+        Svelocity=1+2-getTarget(false);
         small_M.setVelocity(Svelocity);
         big_M.setVelocity(Bvelocity);
 
@@ -141,7 +131,7 @@ public class turret {
 
         double deltaTime = trackingTimer.seconds();
         trackingTimer.reset();
-        double error =getTarget(Team,true)-robotPosition.heading();
+        double error =getTarget(true)-robotPosition.heading();
         final double M_limit =175;
         final double MIN_limit =-175;
         double heading =heading_M.getCurrentPosition();

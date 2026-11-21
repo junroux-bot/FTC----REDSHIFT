@@ -30,7 +30,6 @@ public class RED_OP extends OpMode {
         turret.intt(hardwareMap,"sfm","bfm","hm");
         Position.init(hardwareMap,OpModeStorage.autonomousEndPose.x(),OpModeStorage.autonomousEndPose.y(),OpModeStorage.autonomousEndPose.heading());
         Position.update();
-        turret.setup("red");
         turret.setPoseSource(Position);
 
     }
